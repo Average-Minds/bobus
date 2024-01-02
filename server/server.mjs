@@ -1,7 +1,7 @@
 import WebSocket, { WebSocketServer } from 'ws';
 
 const clients = [];
-let percent = 0.5;
+let section = 0;
 
 const server = new WebSocketServer({ port: 9000 });
 
@@ -11,7 +11,7 @@ const onConnect = (client) => {
     console.log('Новый пользователь');
     clients.push(client);
 
-    client.send(JSON.stringify({ action: 'GET_PERCENT', data: percent }));
+    client.send(JSON.stringify({ action: 'GET_SECTION', data: section }));
 
     client.on('close', () => {
         console.log('Пользователь отключился');
@@ -23,10 +23,10 @@ const onConnect = (client) => {
         try {
             const jsonMessage = JSON.parse(message);
             switch (jsonMessage.action) {
-                case 'SET_PERCENT':
-                  percent = jsonMessage.data;
+                case 'SET_SECTION':
+                  section = jsonMessage.data;
                   clients.forEach(function(client) {
-                    client.send(JSON.stringify({ action: 'GET_PERCENT', data: percent }));
+                    client.send(JSON.stringify({ action: 'GET_SECTION', data: section }));
                   });
                     break;
                 default:

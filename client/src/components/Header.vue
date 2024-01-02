@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { useProgressStore } from '@/stores/progress'
+import { useProgressStore } from '@/stores/progress';
+import { clientSendSection } from '@/client';
 
-const progress = useProgressStore()
+const progress = useProgressStore();
 
-export interface Props {
+interface Props {
   master?: boolean
 }
 
@@ -11,15 +12,21 @@ const props = withDefaults(defineProps<Props>(), {
   master: false,
 })
 
-const plusTenPercent = () => progress.setProgress(progress.progress + .1)
+const nextSection = () => {
+  const newValue = progress.section + 1;
+  progress.setSection(newValue);
+  clientSendSection(newValue);
+}
 </script>
 
 <template>
   <header>
     <div v-if="props.master">
-      <button @click="plusTenPercent">+10%</button>
+      <button @click="nextSection">
+        >>
+      </button>
     </div>
-    <div>{{ progress.percent }} %</div>
+    <div>{{ progress.section }}</div>
   </header>
 </template>
 

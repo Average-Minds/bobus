@@ -1,4 +1,4 @@
-let clientSendPercent = null;
+let clientSendSection = (value: number) => {};
 
 const initClient = (progressStore) => {
 
@@ -11,17 +11,17 @@ const initClient = (progressStore) => {
     client.onmessage = (message: { action: string, data: number }) => {
         console.log('Message: %s', message.data);
         const obj = JSON.parse(message.data);
-        if (obj.action === 'GET_PERCENT') {
-            progressStore.setProgress(obj.data);
+        if (obj.action === 'GET_SECTION') {
+            progressStore.setSection(parseInt(obj.data));
         }
     };
 
-    clientSendPercent = (value: number) => {
+    clientSendSection = (value: number) => {
         client.send(JSON.stringify({
-            action: 'SET_PERCENT',
+            action: 'SET_SECTION',
             data: value.toString()
         }));
     }
 }
 
-export { initClient, clientSendPercent };
+export { initClient, clientSendSection };

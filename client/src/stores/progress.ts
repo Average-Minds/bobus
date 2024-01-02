@@ -1,14 +1,12 @@
-import { ref, computed } from 'vue'
-import { defineStore } from 'pinia'
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
 
 export const useProgressStore = defineStore('progress', () => {
-  const progress = ref(0)
-  
-  const percent = computed(() => progress.value * 100)
+  const section = ref(0);
 
-  function setProgress(value: number) {
-    progress.value = value
+  function setSection(value: number) {
+    section.value = value;
   }
 
-  return { progress, percent, setProgress }
+  return { section, setSection }
 })
