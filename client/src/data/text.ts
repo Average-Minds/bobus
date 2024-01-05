@@ -206,3 +206,5 @@ const text: TText = {
 };
 
 export default text;
+
+export const sectionsLen = text.sections.length;

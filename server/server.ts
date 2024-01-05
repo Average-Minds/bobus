@@ -1,6 +1,7 @@
-import WebSocket, { WebSocketServer } from 'ws';
+import { WebSocketServer } from 'ws';
+import { MESSAGE_TYPES } from '../common/constants';
 
-const clients = [];
+const clients = new Set();
 let section = 0;
 
 const server = new WebSocketServer({ port: 9000 });
@@ -8,25 +9,24 @@ const server = new WebSocketServer({ port: 9000 });
 const onConnect = (client) => {
     client.on('error', console.error);
 
-    console.log('Новый пользователь');
-    clients.push(client);
+    clients.add(client);
+    console.log('Пользователь подключился', clients.size);
 
-    client.send(JSON.stringify({ action: 'GET_SECTION', data: section }));
+    client.send(JSON.stringify({ action: MESSAGE_TYPES.GET_SECTION, data: section }));
 
     client.on('close', () => {
-        console.log('Пользователь отключился');
-        // TODO: Удалить пользователя из clients!!!
+        const closeResult = clients.delete(client);
+        console.log('Пользователь отключился', closeResult, clients.size);
     });
 
     client.on('message', (message) => {
-        console.log(message);
         try {
             const jsonMessage = JSON.parse(message);
             switch (jsonMessage.action) {
-                case 'SET_SECTION':
+                case MESSAGE_TYPES.SET_SECTION:
                   section = jsonMessage.data;
                   clients.forEach(function(client) {
-                    client.send(JSON.stringify({ action: 'GET_SECTION', data: section }));
+                    client.send(JSON.stringify({ action: MESSAGE_TYPES.GET_SECTION, data: section }));
                   });
                     break;
                 default:

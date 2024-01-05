@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import Header from '../components/Header.vue';
-import Main from '../components/Main.vue';
+import MasterMain from '../components/MasterMain.vue';
 </script>
 
 <template>
   <Header master />
-  <Main />
+  <MasterMain />
 </template>

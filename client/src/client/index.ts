@@ -1,6 +1,8 @@
-let clientSendSection = (value: number) => {};
+import { MESSAGE_TYPES } from '../../../common/constants';
 
-const initClient = (progressStore) => {
+let clientSendSection: (value: number) => void;
+
+const initClient = (progressStore: unknown) => {
 
     const client = new WebSocket('ws://localhost:9000');
 
@@ -8,17 +10,17 @@ const initClient = (progressStore) => {
         console.log('Подключился');
     };
 
-    client.onmessage = (message: { action: string, data: number }) => {
+    client.onmessage = (message: { action: string, data: string }) => {
         console.log('Message: %s', message.data);
         const obj = JSON.parse(message.data);
-        if (obj.action === 'GET_SECTION') {
-            progressStore.setSection(parseInt(obj.data));
+        if (obj.action === MESSAGE_TYPES.GET_SECTION) {
+            progressStore.setMasterSection(parseInt(obj.data));
         }
     };
 
     clientSendSection = (value: number) => {
         client.send(JSON.stringify({
-            action: 'SET_SECTION',
+            action: MESSAGE_TYPES.SET_SECTION,
             data: value.toString()
         }));
     }

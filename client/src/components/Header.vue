@@ -12,20 +12,43 @@ const props = withDefaults(defineProps<Props>(), {
   master: false,
 })
 
-const nextSection = () => {
-  const newValue = progress.section + 1;
-  progress.setSection(newValue);
-  clientSendSection(newValue);
+const setSection = (value: number) => {  
+  if (props.master) {
+    const newValue = progress.masterSection + value;
+    progress.setMasterSection(newValue);
+    clientSendSection(newValue);
+  } else {
+    const newValue = progress.section + value;
+    progress.setSection(newValue);
+  }
 }
+
+const prevSection = () => setSection(-1);
+const nextSection = () => setSection(1);
 </script>
 
 <template>
   <header>
+    <button @click="prevSection">
+      ◀
+    </button>
+    <button @click="nextSection">
+      ▶
+    </button>
     <div v-if="props.master">
-      <button @click="nextSection">
-        >>
+      M
+    </div>
+    
+    <div v-else>
+      K
+      <button
+        :disabled="progress.masterSection === progress.section"
+        @click="progress.setSection(progress.masterSection)"
+      >
+        ✨
       </button>
     </div>
+    {{ progress.masterSection }}|{{ progress.section }}
     <div>{{ progress.section }}</div>
   </header>
 </template>
