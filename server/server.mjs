@@ -1,10 +1,11 @@
 import { WebSocketServer } from 'ws';
-import { MESSAGE_TYPES } from '../common/constants';
+import { MESSAGE_TYPES } from '../common/constants.mjs';
 
+const PORT = 8080;
 const clients = new Set();
 let section = 0;
 
-const server = new WebSocketServer({ port: 9000 });
+const server = new WebSocketServer({ port: PORT });
 
 const onConnect = (client) => {
     client.on('error', console.error);
@@ -41,4 +42,4 @@ const onConnect = (client) => {
 
 server.on('connection', onConnect);
 
-console.log('Сервер запущен на 9000 порту');
+console.log(`Сервер запущен на ${PORT} порту`);

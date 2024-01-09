@@ -1,4 +1,4 @@
-import { MESSAGE_TYPES } from '../../../common/constants';
+import { MESSAGE_TYPES } from '../../../common/constants.mjs';
 
 let clientSendSection: (value: number) => void;
 
