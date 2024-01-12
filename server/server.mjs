@@ -1,11 +1,23 @@
+import { createServer } from 'https';
+import { readFileSync } from 'fs';
 import { WebSocketServer } from 'ws';
 import { MESSAGE_TYPES } from '../common/constants.mjs';
 
+const isDev = process.env.IS_LOCAL_DEVELOPMENT;
 const PORT = 8080;
 const clients = new Set();
-let section = 0;
 
-const server = new WebSocketServer({ port: PORT });
+let section = 0;
+let server = null;
+
+if (!isDev) {
+    server = createServer({
+        cert: readFileSync('./certificates/cert.pem'),
+        key: readFileSync('./certificates/key.pem')
+    });
+}
+
+const wss = new WebSocketServer(isDev ? { port: PORT } : { server });
 
 const onConnect = (client) => {
     client.on('error', console.error);
@@ -40,6 +52,12 @@ const onConnect = (client) => {
     });
 }
 
-server.on('connection', onConnect);
+wss.on('connection', onConnect);
 
-console.log(`Сервер запущен на ${PORT} порту`);
+if (isDev) {
+    console.log(`Локальный сервер запущен на ${PORT} порту`);
+} else {
+    server.listen(PORT, () => {
+        console.log(`Сервер запущен на ${PORT} порту`);
+    });
+}
