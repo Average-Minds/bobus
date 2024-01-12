@@ -4,7 +4,7 @@ let clientSendSection: (value: number) => void;
 
 const initClient = (progressStore: unknown) => {
 
-    const client = new WebSocket(import.meta.env.VITE_WS_SERVER);
+    const client = new WebSocket(import.meta.env.VITE_WS_SERVER, 'echo-protocol');
 
     client.onopen = () => {
         console.log('Подключился');
