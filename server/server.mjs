@@ -57,7 +57,7 @@ wss.on('connection', onConnect);
 if (isDev) {
     console.log(`Локальный сервер запущен на ${PORT} порту`);
 } else {
-    server.listen(PORT, () => {
+    server.listen(PORT, '0.0.0.0', () => {
         console.log(`Сервер запущен на ${PORT} порту`);
     });
 }
